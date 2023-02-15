@@ -26,12 +26,14 @@ app.use("/api/message", messageRoutes);
 app.use(notFound);
 app.use(errorHandler);
 
-const server = app.listen(PORT, console.log("Server started"));
+// const server = app.listen(PORT, console.log("Server started"));
+const server = require('http').createServer(app);
 
 const io = require("socket.io")(server, {
   pingTimeout: 60000,
   cors: {
     origin: "*",
+    methods: ['GET', 'POST'],
   },
 });
 
@@ -65,4 +67,8 @@ io.on("connection", (socket) => {
     console.log("USER DISCONNECTED");
     socket.leave(userData._id);
   });
+});
+
+server.listen(PORT, () => {
+  console.log('Server listening');
 });
